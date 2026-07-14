@@ -3,7 +3,7 @@
 This document tracks the execution of the Master Plan.
 
 ## Phase 0: Define success criteria
-- [x] Pick scale checkpoints (1M / 5M / 10M)
+- [x] Pick scale checkpoint (1M)
 - [x] Pick pass/fail thresholds
 - [x] Create `criteria.md`
 
@@ -27,10 +27,8 @@ This document tracks the execution of the Master Plan.
 
 ## Phase 3: Seed to scale
 - [ ] Seed to 1M and run Phase 4 suite.
-- [ ] Seed to 5M and run Phase 4 suite.
-- [ ] Seed to 10M and run Phase 4 suite.
 
-## Phase 4: Test Suite (To be run per checkpoint)
+## Phase 4: Test Suite (To be run at 1M checkpoint)
 - [ ] Raw scale queries and UI tests.
 - [ ] Folder organization queries.
 - [ ] Search indexing (`tsvector` / GIN).
@@ -40,7 +38,7 @@ This document tracks the execution of the Master Plan.
 - [ ] API Performance (k6).
 
 ## Phase 5: Build comparison tables
-- [ ] Compile data across checkpoints.
+- [ ] Compile baseline vs optimized performance data.
 
 ## Phase 6: Write the article
 - [ ] Draft article.

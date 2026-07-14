@@ -72,7 +72,7 @@ export function setup() {
   try {
     const data = res.json();
     if (data && Array.isArray(data.docs)) {
-      categoryIds = data.docs.map((d) => String(d.id));
+      categoryIds = data.docs.map((d) => d.id);
     }
   } catch (e) {
     console.error('Could not fetch categories:', e);
@@ -95,19 +95,20 @@ export default function (data) {
   // Decode our tiny PNG from base64 to binary for the multipart body
   const imageBytes = encoding.b64decode(TINY_PNG_B64, 'std', 's');
 
-  // Build the multipart form-data payload exactly as a browser would:
-  // - "file"     → the binary image
-  // - "alt"      → required field in the Media collection
-  // - "tags"     → optional metadata field
-  // - "category" → relationship field (optional, skipped if no categories)
-  const formData = {
-    file: http.file(imageBytes, filename, 'image/png'),
+  // Build the multipart form-data payload.
+  // Payload CMS REST API expects non-file fields as a JSON string under "_payload".
+  const payloadData = {
     alt: randomAlt(),
     tags: randomTags(),
   };
   if (category) {
-    formData['category'] = category;
+    payloadData['category'] = category;
   }
+
+  const formData = {
+    file: http.file(imageBytes, filename, 'image/png'),
+    _payload: JSON.stringify(payloadData),
+  };
 
   const res = http.post(`${BASE_URL}/api/media`, formData, {
     tags: { name: 'Upload Media' },

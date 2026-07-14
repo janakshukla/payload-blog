@@ -95,7 +95,7 @@ async function run() {
   await runExplain(
     client,
     'Paginated list — page 1 (LIMIT 20 OFFSET 0)',
-    `SELECT id, filename, alt, tags, "capturedAt", category FROM "media" ORDER BY "createdAt" DESC LIMIT 20 OFFSET 0`,
+    `SELECT id, filename, alt, tags, captured_at, category FROM "media" ORDER BY created_at DESC LIMIT 20 OFFSET 0`,
   )
 
   // -----------------------------------------------------------------------
@@ -104,7 +104,7 @@ async function run() {
   await runExplain(
     client,
     'Paginated list — page 5000 (LIMIT 20 OFFSET 100000) — EXPECT HIGH COST',
-    `SELECT id, filename, alt, tags, "capturedAt", category FROM "media" ORDER BY "createdAt" DESC LIMIT 20 OFFSET 100000`,
+    `SELECT id, filename, alt, tags, captured_at, category FROM "media" ORDER BY created_at DESC LIMIT 20 OFFSET 100000`,
   )
 
   // -----------------------------------------------------------------------
@@ -171,13 +171,13 @@ async function run() {
   // -----------------------------------------------------------------------
   await runExplain(
     client,
-    'Multi-field filter — tags + capturedAt range (no composite index, baseline)',
+    'Multi-field filter — tags + captured_at range (no composite index, baseline)',
     `
-      SELECT id, filename, alt, tags, "capturedAt"
+      SELECT id, filename, alt, tags, captured_at
       FROM "media"
       WHERE tags LIKE $1
-        AND "capturedAt" > $2
-      ORDER BY "capturedAt" DESC
+        AND captured_at > $2
+      ORDER BY captured_at DESC
       LIMIT 20
     `,
     ['%tech%', new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000).toISOString()],
@@ -193,8 +193,8 @@ async function run() {
 -- Index on category (relationship field — most common filter)
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_category ON "media"(category);
 
--- Index on capturedAt (range queries)
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_captured_at ON "media"("capturedAt");
+-- Index on captured_at (range queries)
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_captured_at ON "media"(captured_at);
 
 -- GIN index for full-text search on alt + tags (combined tsvector)
 -- Run this AFTER baseline measurements to compare before/after
