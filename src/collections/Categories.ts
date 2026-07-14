@@ -1,29 +1,24 @@
 import type { CollectionConfig } from 'payload'
 
-export const Media: CollectionConfig = {
-  slug: 'media',
+export const Categories: CollectionConfig = {
+  slug: 'categories',
+  admin: {
+    useAsTitle: 'name',
+  },
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'alt',
+      name: 'name',
       type: 'text',
       required: true,
     },
     {
-      name: 'tags',
-      type: 'text',
-    },
-    {
-      name: 'capturedAt',
-      type: 'date',
-    },
-    {
-      name: 'category',
+      name: 'parent',
       type: 'relationship',
       relationTo: 'categories',
+      hasMany: false,
     },
   ],
-  upload: true,
 }
