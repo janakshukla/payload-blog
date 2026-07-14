@@ -95,7 +95,7 @@ async function run() {
   await runExplain(
     client,
     'Paginated list — page 1 (LIMIT 20 OFFSET 0)',
-    `SELECT id, filename, alt, tags, captured_at, category FROM "media" ORDER BY created_at DESC LIMIT 20 OFFSET 0`,
+    `SELECT id, filename, alt, tags, captured_at, category_id FROM "media" ORDER BY created_at DESC LIMIT 20 OFFSET 0`,
   )
 
   // -----------------------------------------------------------------------
@@ -104,7 +104,7 @@ async function run() {
   await runExplain(
     client,
     'Paginated list — page 5000 (LIMIT 20 OFFSET 100000) — EXPECT HIGH COST',
-    `SELECT id, filename, alt, tags, captured_at, category FROM "media" ORDER BY created_at DESC LIMIT 20 OFFSET 100000`,
+    `SELECT id, filename, alt, tags, captured_at, category_id FROM "media" ORDER BY created_at DESC LIMIT 20 OFFSET 100000`,
   )
 
   // -----------------------------------------------------------------------
@@ -137,7 +137,7 @@ async function run() {
     await runExplain(
       client,
       'Folder query — shallow (single category, direct relationship)',
-      `SELECT id, filename, alt FROM "media" WHERE category = $1 LIMIT 20`,
+      `SELECT id, filename, alt FROM "media" WHERE category_id = $1 LIMIT 20`,
       [categoryId],
     )
   }
@@ -155,11 +155,11 @@ async function run() {
           SELECT id FROM "categories" WHERE id = $1
           UNION ALL
           SELECT c.id FROM "categories" c
-          INNER JOIN folder_tree ft ON c.parent = ft.id
+          INNER JOIN folder_tree ft ON c.parent_id = ft.id
         )
         SELECT m.id, m.filename, m.alt
         FROM "media" m
-        WHERE m.category IN (SELECT id FROM folder_tree)
+        WHERE m.category_id IN (SELECT id FROM folder_tree)
         LIMIT 50
       `,
       [categoryId],
@@ -190,8 +190,8 @@ async function run() {
   console.log('RECOMMENDED INDEXES TO ADD (run these manually, then re-run this script)')
   console.log('='.repeat(70))
   console.log(`
--- Index on category (relationship field — most common filter)
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_category ON "media"(category);
+-- Index on category_id (relationship field — most common filter)
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_category ON "media"(category_id);
 
 -- Index on captured_at (range queries)
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_captured_at ON "media"(captured_at);

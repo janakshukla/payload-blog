@@ -176,8 +176,8 @@ docker exec -it $(docker compose ps -q postgres) psql -U payload -d payload
 
 Run these SQL commands inside the psql shell:
 ```sql
--- 1. Index on category relationship
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_category ON "media"(category);
+-- 1. Index on category_id relationship
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_category ON "media"(category_id);
 
 -- 2. Index on captured_at date range
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_media_captured_at ON "media"("captured_at");
