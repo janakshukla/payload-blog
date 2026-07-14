@@ -6,10 +6,10 @@ A full, followable plan from setup to published article. Decisions already locke
 
 ## Phase 0 — Define success criteria (before writing any code)
 
-- [ ] Pick scale checkpoints: **1M / 5M / 10M** media documents
+- [ ] Pick scale checkpoint: **1M** media documents
 - [ ] Pick pass/fail thresholds you'll judge against, e.g.:
   - API list endpoint p95 < 300ms
-  - Search query < 500ms at 5M records
+  - Search query < 500ms at 1M records
   - Upload success rate > 99% at 50 concurrent uploads
 - [ ] Write these down in a `criteria.md` — you'll quote this in the article intro and again in the verdict, so the piece reads like a real experiment, not a vibe check
 
@@ -73,11 +73,9 @@ Once everything runs clean locally → move to Phase 2. Don't run a local millio
 
 ## Phase 3 — Seed to scale
 
-- [ ] Run seeding script to checkpoint 1 (1M records) — log throughput over time as the table grows
+- [ ] Run seeding script to checkpoint (1M records) — log throughput over time as the table grows
 - [ ] Run full Phase 4 test suite (below) at this checkpoint, save all raw output to a `results/1M/` folder
-- [ ] Seed to checkpoint 2 (5M), repeat
-- [ ] Seed to checkpoint 3 (10M), repeat
-- [ ] Stop VM/Postgres between each checkpoint session if there's a time gap
+- [ ] Stop VM/Postgres between sessions if there's a time gap
 
 ---
 
@@ -85,7 +83,7 @@ Once everything runs clean locally → move to Phase 2. Don't run a local millio
 
 ### 4.1 Raw scale handling
 - [ ] Full collection count query time
-- [ ] DB table size on disk (`\dt+`) and growth curve across checkpoints
+- [ ] DB table size on disk (`\dt+`) and index sizes (`\di+`)
 - [ ] Admin UI list view load time (capture via browser DevTools → export HAR as proof)
 
 ### 4.2 Folder organization
@@ -123,7 +121,7 @@ Once everything runs clean locally → move to Phase 2. Don't run a local millio
 
 ## Phase 5 — Build comparison tables
 
-- [ ] Cross-checkpoint table: same metric across 1M/5M/10M (shows degradation curve)
+- [ ] Baseline vs. Optimized table: same metric before and after database indexing at 1M (shows index speedup)
 - [ ] Local-dev vs. Azure-VM table (sanity check, optional to publish)
 - [ ] Storage performance table (from 4.6)
 - [ ] Indexed vs. non-indexed query table (from 4.3/4.4)

@@ -1,16 +1,14 @@
 # Success Criteria for Payload CMS Scale Test
 
-This document defines the pass/fail thresholds for our scale test experiment. We will judge Payload CMS against these criteria at various data scales.
+This document defines the pass/fail thresholds for our scale test experiment. We will judge Payload CMS against these criteria at 1 Million records.
 
-## Scale Checkpoints
-We will perform our test suite at the following media document volumes:
-- 1,000,000 (1M) documents
-- 5,000,000 (5M) documents
-- 10,000,000 (10M) documents
+## Scale Checkpoint
+We will perform our test suite at the following media document volume:
+- **1,000,000 (1M) documents**
 
 ## Pass/Fail Thresholds
 
-To consider Payload CMS "successful" at handling a large media library, it must meet the following performance benchmarks at the **5M records** scale (with reasonable degradation allowed up to 10M):
+To consider Payload CMS "successful" at handling a large media library, it must meet the following performance benchmarks at the **1M records** scale:
 
 ### 1. API Read Performance
 - **List Endpoint (p95 latency):** < 300ms

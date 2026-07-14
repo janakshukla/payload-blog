@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
+import encoding from 'k6/encoding';
 
 // ---------------------------------------------------------------------------
 // Configuration

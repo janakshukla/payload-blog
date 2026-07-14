@@ -308,9 +308,19 @@ async function run() {
           })
         )
       } else {
-        // Reuse the anchor's actual filename so the physical file exists in storage.
-        // The unique constraint on filename has been dropped to allow this.
+        // Generate a unique filename to satisfy the database unique constraint,
+        // but copy all other metrics from the anchor. Since we call payload.db.create,
+        // no actual file upload to Azure occurs during seeding.
         const anchor = anchorDocs[index % anchorDocs.length]
+        const uuid = crypto.randomUUID()
+        const ext = path.extname(anchor.filename)
+        const newFilename = `seeded-${uuid}${ext}`
+
+        // Construct a unique URL path by replacing the original filename
+        const lastSlash = anchor.url.lastIndexOf('/')
+        const newUrl = lastSlash !== -1 
+          ? `${anchor.url.substring(0, lastSlash)}/${newFilename}`
+          : `/media/${newFilename}`
 
         batchPromises.push(
           payload.db.create({
@@ -320,12 +330,12 @@ async function run() {
               tags,
               capturedAt: capturedAt.toISOString(),
               category,
-              filename: anchor.filename,
+              filename: newFilename,
               filesize: anchor.filesize,
               mimeType: anchor.mimeType,
               width: anchor.width,
               height: anchor.height,
-              url: anchor.url,
+              url: newUrl,
               sizes: anchor.sizes,
             },
           })
